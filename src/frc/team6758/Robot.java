@@ -29,7 +29,7 @@ import static java.lang.Thread.sleep;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends IterativeRobot 
 {
-    private static final String fileName = "";
+    private static final String fileName = "Joystick_Data.txt";
     private static final String DEFAULT_AUTO = "Default";
     private static final String CUSTOM_AUTO = "My Auto";
     private String autoSelected;
@@ -114,25 +114,31 @@ public class Robot extends IterativeRobot
      * This function is called periodically during operator control.
      */
     @Override
-    public void teleopPeriodic() 
+    public void teleopPeriodic()
     {
         //drive code will go here
+
+
+
         boolean run = true;
         //learning code will go here
-        Thread learningThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(run) {
-                    if (Thread.interrupted()) break;
-                    if (check1) {
-                        fileOut.print(stick.getY() + " " + stick.getTwist() + ",");
-                    }
+        Thread learningThread = new Thread(() -> {
+            while(run) {
+                if (Thread.interrupted()) break;
+                if (check1) {
+                    fileOut.print(stick.getY() + " " + stick.getTwist() + ",");
                 }
+            }
 
+            try {
+                sleep(2000);
+            }
+            catch (InterruptedException e){
+                System.out.println("THE THREAD WAS INTERRUPTED! \n\n" + e);
             }
         });
+
         learningThread.start();
-        Thread.sleep(2000);
     }
 
     /**
